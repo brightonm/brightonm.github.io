@@ -1,5 +1,2 @@
-Here you can say lots of fun things about your site.
-
-Maybe say a some things about yourself.
-
-Or maybe what you plan to blog about.
+This page is about quant finance. 
+From C++ optimization to use of neural networks in quant finance derivatives pricing. 
