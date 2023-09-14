@@ -1,2 +1,1 @@
-This page is about quant finance. 
-From C++ optimization to use of neural networks in quant finance derivatives pricing. 
+Hi, this is Brighton. I’m documenting my learning notes in this blog. Besides, I’m an AI Quant at Murex. 
