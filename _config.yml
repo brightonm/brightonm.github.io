@@ -24,6 +24,8 @@ theme: "minima"
 kramdown:
   syntax_highlighter_opts:
     disable: true
+
+markdown: kramdown
     
 plugins:
   #- jekyll-feed
