@@ -21,15 +21,24 @@ theme: "minima"
 
 #rss: rss
 
+markdown: kramdown
+
 kramdown:
   syntax_highlighter_opts:
     disable: true
-
-markdown: kramdown
     
 plugins:
-  #- jekyll-feed
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-octicons
+  - jekyll-toc
+  - jekyll-twitter-plugin
+  - jekyll-relative-links
+  - jekyll-seo-tag
+  - jekyll-remote-theme
+  - jekyll-paginate
   - jekyll-sitemap
+  - jemoji
 
 titles_from_headings:
   strip_title: true
