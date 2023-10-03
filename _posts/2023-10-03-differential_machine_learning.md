@@ -1,6 +1,7 @@
 # Differential Machine Learning
 
-* TOC {:toc}
+* TOC 
+{:toc}
 
 ## Training with Derivatives
 
