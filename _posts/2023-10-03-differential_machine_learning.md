@@ -6,7 +6,7 @@
 ## Training with Derivatives
 
 <p align="center">
-  <img src="https://github.com/brightonm/brightonm.github.io/blob/main/_posts/imgs/diff_ml_paper.PNG" />
+  <img src="/_posts/imgs/diff_ml_paper.png" />
 </p>
 
 
