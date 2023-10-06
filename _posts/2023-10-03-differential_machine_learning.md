@@ -5,10 +5,7 @@
 
 ## Training with Derivatives
 
-<p align="center">
-  <img src="/_posts/imgs/diff_ml_paper.png" />
-</p>
-
+![test]("/_posts/imgs/diff_ml_paper.png")
 
 ## Application on Black-Scholes Example
 
