@@ -5,7 +5,7 @@
 
 ## Training with Derivatives
 
-![test]("/_posts/imgs/diff_ml_paper.png")
+![test](/docs/assets/images/diff_ml_paper.png)
 
 ## Application on Black-Scholes Example
 
