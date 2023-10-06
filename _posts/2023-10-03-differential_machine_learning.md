@@ -1,9 +1,14 @@
-# Differential Machine Learning
+# Differential Deep Learning
 
-* TOC 
+* TOC
 {:toc}
 
 ## Training with Derivatives
+
+<p align="center">
+  <img src="imgs/diff_ml_paper.PNG" />
+</p>
+
 
 ## Application on Black-Scholes Example
 
