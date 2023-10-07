@@ -4,7 +4,7 @@ description: "Quantitative Finance & AI" # This will show up in places like twit
 
 # Email / Social media user names used by the minima theme:
 # All of these are optional and can be removed or commented out
-email: "brighton.muffat@gmail.com"
+author.email: "brighton.muffat@gmail.com"
 github_username: "brightonm"
 linkedin_username: "brighton-muffat"
 #facebook_username: username
