@@ -1,11 +1,11 @@
 # Differential Deep Learning
 
 <div>
-    <a href="https://www.example1.com" style="text-decoration: none; color: black;">
-        <span style="font-size: 40px;">🤗</span>
-    </a>
     <a href="https://www.example2.com" style="text-decoration: none; color: black;">
         <i class="fa fa-book fa-3x" style="color: darkorange;"></i>
+    </a>
+    <a href="https://www.example1.com" style="text-decoration: none; color: black;">
+        <span style="font-size: 38px;">🤗</span>
     </a>
 </div>
 
