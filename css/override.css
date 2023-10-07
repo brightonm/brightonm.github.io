@@ -43,3 +43,11 @@ hr {
   font-size: 2.5em;
   opacity: 0.3;
 }
+
+img.emojione {
+  margin: 0px !important;
+  display: inline !important;
+  
+  height: auto;
+  width: 50px;
+}
