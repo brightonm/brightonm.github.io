@@ -4,7 +4,7 @@
 <p>🤗</p>
 <br><br>
 
-<i class="fa fa-book fa-3x"></i>
+<i class="fa fa-book"></i>
 
 <p align="center">
   <img src="/docs/assets/images/diff_ml_paper.png" />
