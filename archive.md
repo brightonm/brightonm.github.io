@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Posts
+title: Archive
 ---
 
 {% for tag in site.tags %}
