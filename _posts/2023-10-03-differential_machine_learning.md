@@ -1,13 +1,15 @@
 # Differential Deep Learning
 
+<p align="center">
+  <img src="/docs/assets/images/diff_ml_paper.png" />
+</p>
+
 * TOC
 {:toc}
 
 ## Training with Derivatives
 
-<p align="center">
-  <img src="/docs/assets/images/diff_ml_paper.png" />
-</p>
+
 
 ## Application on Black-Scholes Example
 
