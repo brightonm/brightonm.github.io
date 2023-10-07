@@ -4,6 +4,8 @@
   <img src="/docs/assets/images/diff_ml_paper.png" />
 </p>
 
+<i class="fa-solid fa-book"></i>
+
 * TOC
 {:toc}
 
