@@ -10,7 +10,9 @@
 </div>
 
 <p align="center">
-  <img src="/docs/assets/images/diff_ml_paper.png" />
+  <a href="https://arxiv.org/abs/2005.02347">
+    <img src="/docs/assets/images/diff_ml_paper.png" />
+  </a>
 </p>
 
 * TOC
