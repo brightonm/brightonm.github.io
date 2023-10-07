@@ -51,3 +51,7 @@ img.emojione {
   height: auto;
   width: 50px;
 }
+
+.fa-cog {
+  color: orange;
+}
