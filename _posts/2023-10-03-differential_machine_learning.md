@@ -12,7 +12,7 @@
 <!-- "https://arxiv.org/abs/2005.02347" -->
 <div style="text-align: center;">
   <img src="/docs/assets/images/diff_ml_paper.png" alt="Image description">
-  <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline;">Savine et al. (2020)</a></figcaption>
+  <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888">Savine et al. (2020)</a></figcaption>
 </div>
 
 * TOC
