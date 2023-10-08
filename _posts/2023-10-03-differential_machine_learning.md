@@ -14,7 +14,7 @@
   <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888">Savine et al., 2020</a></figcaption>
 </div>
 
-This post presents an annotated version of the Differential Machine Leanrning paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>)
+This post presents an annotated version of the Differential Machine Leanrning paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch code. 
 
 * TOC
 {:toc}
@@ -32,5 +32,26 @@ Unlike the original article, we propose a simple example that does not use pathw
 ## Notebook and demo on Hugging Face Spaces
 
 ## Further Research
+
+## Citation
+
+Cited as:
+
+<blockquote>
+Muffat, Brighton. (Oct 2023). Diffential Deep Learning. https://brightonmuffat.com/2023/10/03/differential_machine_learning.html.
+</blockquote>
+
+Or 
+
+```bibtex
+@article{muffat2023differentialdeeplearning,
+  title   = "Differential Deep Learning",
+  author  = "Muffat, Brighton",
+  journal = "brightonmuffat.com",
+  year    = "2023",
+  month   = "Oct",
+  url     = "https://brightonmuffat.com/2023/10/03/differential_machine_learning.html"
+}
+```
 
 ## References
