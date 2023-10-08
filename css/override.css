@@ -55,11 +55,9 @@ img.emojione {
 img {
   display: block;
   margin: 0 auto;
-  max-width: 100%;
 }
 
 figcaption {
   color: #888;
   text-align: center;
-  width: 75%;
 }
