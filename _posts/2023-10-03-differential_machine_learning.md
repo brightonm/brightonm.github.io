@@ -9,10 +9,10 @@
     </a>  
 </div>
 
-<div style="text-align: center;">
+<div style="text-align: center; margin-bottom: 20px;">
   <img src="/docs/assets/images/diff_ml_paper.png" alt="Image description">
   <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a></figcaption>
-</div style="margin-bottom: 20px;">
+</div>
 
 This post presents an annotated version of the Differential Machine Leanrning paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch code. 
 
@@ -38,7 +38,7 @@ Unlike the original article, we propose a simple example that does not use pathw
 Cited as:
 
 <blockquote>
-Muffat, Brighton. (Oct 2023). Diffential Deep Learning. https://brightonmuffat.com/2023/10/03/differential_machine_learning.html.
+Muffat, Brighton. (Oct 2023). Differential Deep Learning. https://brightonmuffat.com/2023/10/03/differential_machine_learning.html.
 </blockquote>
 
 Or 
@@ -55,3 +55,5 @@ Or
 ```
 
 ## References
+
+
