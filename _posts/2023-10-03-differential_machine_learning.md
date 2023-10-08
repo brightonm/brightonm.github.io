@@ -9,11 +9,10 @@
     </a>  
 </div>
 
-<p align="center">
-  <a href="https://arxiv.org/abs/2005.02347">
-    <img src="/docs/assets/images/diff_ml_paper.png" />
-  </a>
-</p>
+<!-- "https://arxiv.org/abs/2005.02347" -->
+{:.center}
+![paper](/docs/assets/images/diff_ml_paper.png)
+This my image
 
 * TOC
 {:toc}
@@ -26,7 +25,7 @@
 
 ### Supervised Learning with Differential Machine Learning
 
-## Notebooks and demo on Spaces from Hugging Face
+## Notebook and demo on Hugging Face Spaces
 
 ## Further Research
 
