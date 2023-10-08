@@ -10,9 +10,11 @@
 </div>
 
 <!-- "https://arxiv.org/abs/2005.02347" -->
-{:.center}
-![paper](/docs/assets/images/diff_ml_paper.png)
-This my image
+<div style="text-align: center;">
+  <img src="/docs/assets/images/diff_ml_paper.png" alt="Image description">
+  <p style="color: lightgrey; text-align: center;">Image caption</p>
+</div>
+
 
 * TOC
 {:toc}
@@ -30,9 +32,3 @@ This my image
 ## Further Research
 
 ## References
-
-
-
-.center {
-  text-align: center;
-}
