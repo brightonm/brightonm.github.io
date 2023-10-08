@@ -30,3 +30,9 @@ This my image
 ## Further Research
 
 ## References
+
+
+
+.center {
+  text-align: center;
+}
