@@ -11,7 +11,7 @@
 
 <div style="text-align: center;">
   <img src="/docs/assets/images/diff_ml_paper.png" alt="Image description">
-  <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888, margin-bottom: 20px;">Savine et al., 2020</a></figcaption>
+  <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888; margin-bottom: 20px;">Savine et al., 2020</a></figcaption>
 </div>
 
 This post presents an annotated version of the Differential Machine Leanrning paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch code. 
