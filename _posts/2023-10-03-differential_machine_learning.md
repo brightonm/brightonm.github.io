@@ -12,9 +12,8 @@
 <!-- "https://arxiv.org/abs/2005.02347" -->
 <div style="text-align: center;">
   <img src="/docs/assets/images/diff_ml_paper.png" alt="Image description">
-  <p style="color: lightgrey; text-align: center;">Image caption</p>
+  <figcaption>>Image caption</figcaption>
 </div>
-
 
 * TOC
 {:toc}
