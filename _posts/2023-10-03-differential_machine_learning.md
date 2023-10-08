@@ -24,10 +24,11 @@ This post presents an annotated version of the Differential Machine Leanrning pa
 ### Supervised Learning
 
 Let $X \in \mathbb{R}^{n \times d}$ be a dataset of inputs with $n$ samples and $d$ features, and let $y \in \mathbb{R}^{n}$ represent the corresponding labels. In the context of pricing a financial derivative, $X$ contains information about the derivative's payoff, such as the strike price, and the model used to compute the price, along with market data like spot prices and interest rates. $y$ represents the corresponding prices. Depending on the pricing model and payoff structure, these prices can be generated either analytically or through computationally expensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
+
 $$
 \begin{align*}
   f: \mathbb{R}^{n \times d} &\to \mathbb{R}^{n}\\
-  X &\mapsto y.
+  X &\mapsto y
 \end{align*}
 $$
 
