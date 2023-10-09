@@ -31,9 +31,6 @@ kramdown:
   auto_ids: true
   hard_wrap: false
   syntax_highlighter: rouge
-  syntax_highlighter_opts:
-  # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
 
 use_math: true
 
