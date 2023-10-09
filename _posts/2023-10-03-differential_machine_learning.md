@@ -47,7 +47,7 @@ Various numerical algorithms based on mini-batch stochastic gradient descent, su
 *In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 </a>.
 
-```python3
+```python
 import torch
 import torch.nn as nn
 from torch.optimizer import Adam 
@@ -73,7 +73,6 @@ n_samples = 256
 d_features = 5
 X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
-
 ...
 
 loss = loss_func(f_theta(X), outputs)
