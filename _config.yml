@@ -32,7 +32,8 @@ kramdown:
   hard_wrap: false
   syntax_highlighter: rouge
   syntax_highlighter_opts:
-    disable: true
+  # Use existing pygments syntax highlighting css
+    css_class: 'highlight'
 
 use_math: true
 
