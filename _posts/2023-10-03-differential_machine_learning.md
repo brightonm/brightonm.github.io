@@ -90,7 +90,7 @@ optimizer.step()
 In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks," is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
 
 $$
-Z = \frac{\partial y}{\partial X} \in \mathbb{R^{n \times d}}\\
+Z = \frac{\partial y}{\partial X} \in \mathbb{R}^{n \times d}\\
 $$
 
 Each element $Z_{ij}$ in the matrix corresponds to the partial derivative of the $i$-th element of the vector $y$ with respect to the $j$-th element of the matrix $X$.
