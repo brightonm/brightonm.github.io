@@ -63,20 +63,3 @@ figcaption {
   text-align: center;
 
 }
-
-pre {
-  display: block;
-  padding: 1em;
-  margin: 1em 0;
-  border: 1px solid #ccc;
-  background: #f8f8f8;
-}
-code {
-  display: block;
-  padding: 0.5em;
-  margin: 0;
-  font-family: monospace;
-  font-size: 1em;
-  color: #333;
-  background: #f8f8f8;
-}

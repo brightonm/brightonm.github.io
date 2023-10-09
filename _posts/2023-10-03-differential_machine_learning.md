@@ -47,7 +47,7 @@ Various numerical algorithms based on mini-batch stochastic gradient descent, su
 *In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 </a>.
 
-```python
+{% highlight python %}
 import torch
 import torch.nn as nn
 from torch.optimizer import Adam 
@@ -68,7 +68,7 @@ loss_func = nn.MSE()
 # define the optimizer
 optimizer = Adam(f_theta.parameters(), lr=1e-3)
 
-# generate random inputs and outputs of one batch
+# generate random inputs and outputs simulating one batch
 n_samples = 256
 d_features = 5
 X = torch.rand(n_samples, d_features)
@@ -83,7 +83,7 @@ loss.backward()
 
 # perform on optimization step in the Adam algorithm
 optimizer.step()
-```
+{% endhighlight %}
 
 ### Adding differentials
 
@@ -127,7 +127,7 @@ Cited as:
 Muffat, Brighton. (Oct 2023). Differential Deep Learning. https://brightonmuffat.com/2023/10/03/differential_machine_learning.html.
 </blockquote>
 
-Or 
+Or
 
 ```bibtex
 @article{muffat2023differentialdeeplearning,
