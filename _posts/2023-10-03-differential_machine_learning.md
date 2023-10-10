@@ -74,7 +74,7 @@ X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
 ...
 
-**`loss = loss_func(f_theta(X), outputs)`**
+`loss = loss_func(f_theta(X), outputs)`
 
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
@@ -83,6 +83,8 @@ loss.backward()
 # perform on optimization step in the Adam algorithm
 optimizer.step()
 {% endhighlight %}
+
+The interesting part for the 
 
 ## Supervised Learning with differentials
 
@@ -103,11 +105,14 @@ $$
 
  The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
+Unlike the article, I'm adopting an offline learning approach here. I'll be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a predefined domain of market data.
 
+<div style="text-align: center; margin-bottom: 20px;">
+  <img src="/docs/assets/images/diff_ml_twin_network.PNG" alt="Image description">
+  <figcaption>Fig. 2. Twin network (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
+</div>
 
-
-
-
+They present a twin network to show that, in the same way we can get derivatives of outputs regarding to weights, we can have. It's very easy to simulate in a pythonic way using PyTorch, see the next section. 
 
 ### PyTorch implementation
 
@@ -115,8 +120,6 @@ $$
 </a>.
 
 ## Application on Black-Scholes Example
-
-Unlike the article, I'm going to take an offline learning approach here. I'm going to apply differential machine learning by learning on ground truth prices and not on noisy sample payoffs as in the article. Differential deep learning can also help with this approach. The data generation phase and training are expensive, but the neural network is trained only once on a large predefined domain of market data.
 
 Unlike the article, we propose a simple example that does not use pathwise derivatives, which is the approximation of the price of a European call under Black-Scholes diffusion.
 
