@@ -74,7 +74,7 @@ X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
 ...
 
-**loss = loss_func(f_theta(X), outputs)**
+**`loss = loss_func(f_theta(X), outputs)`**
 
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
@@ -87,7 +87,6 @@ optimizer.step()
 ## Supervised Learning with differentials
 
 ### Training with Derivatives
-
 
 In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks", is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
 
@@ -105,7 +104,15 @@ $$
  The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
 
+
+
+
+
+
 ### PyTorch implementation
+
+*In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
+</a>.
 
 ## Application on Black-Scholes Example
 
