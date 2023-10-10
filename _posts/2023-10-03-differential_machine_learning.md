@@ -14,7 +14,7 @@
   <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a></figcaption>
 </div>
 
-This post presents an annotated version of the Differential Machine Lenrning paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch implementation. 
+This post presents an annotated version of the **Differential Machine Learning** paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch implementation. 
 
 * TOC
 {:toc}
@@ -112,7 +112,7 @@ Unlike the article, I'm adopting an offline learning approach here. I'll be empl
   <figcaption>Fig. 2. Twin network (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
 </div>
 
-They present a twin network to show that, in the same way we can get derivatives of outputs regarding to weights, we can have. It's very easy to simulate in a pythonic way using PyTorch, see the next section. 
+They present a twin network to show that, in the same way we can get derivatives of outputs regarding to weights, we can have. It's very easy to simulate in a pythonic way using PyTorch, see the next section.
 
 ### PyTorch implementation
 
