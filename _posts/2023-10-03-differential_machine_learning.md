@@ -19,9 +19,8 @@ This post presents an annotated version of the Differential Machine Lenrning pap
 * TOC
 {:toc}
 
-## Training with Derivatives
 
-### Supervised Learning
+## Supervised Learning
 
 Let $X \in \mathbb{R}^{n \times d}$ be a dataset of inputs with $n$ samples and $d$ features, and let $y \in \mathbb{R}^{n}$ represent the corresponding labels. In the context of pricing a financial derivative, $X$ contains information about the derivative's payoff, such as the strike price, and the model used to compute the price, along with market data like spot prices and interest rates. $y$ represents the corresponding prices. Depending on the pricing model and payoff structure, these prices can be generated either analytically or through computationally expensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
 
@@ -42,7 +41,7 @@ $$
 
 Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial J(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
-#### PyTorch implementation
+### PyTorch implementation
 
 *In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 </a>.
@@ -50,7 +49,7 @@ Various numerical algorithms based on mini-batch stochastic gradient descent, su
 {% highlight python %}
 import torch
 import torch.nn as nn
-from torch.optimizer import Adam 
+from torch.optimizer import Adam
 
 # for reproducibility
 torch.manual_seed(7)
@@ -75,7 +74,7 @@ X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
 ...
 
-loss = loss_func(f_theta(X), outputs)
+**loss = loss_func(f_theta(X), outputs)**
 
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
@@ -85,9 +84,12 @@ loss.backward()
 optimizer.step()
 {% endhighlight %}
 
-### Adding differentials
+## Supervised Learning with differentials
 
-In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks," is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
+### Training with Derivatives
+
+
+In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks", is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
 
 $$
 Z = \frac{\partial y}{\partial X} \in \mathbb{R}^{n \times d}\\
@@ -103,7 +105,7 @@ $$
  The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
 
-#### PyTorch implementation
+### PyTorch implementation
 
 ## Application on Black-Scholes Example
 
