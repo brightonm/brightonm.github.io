@@ -138,9 +138,9 @@ Z = torch.rand(256, 5)
 # Set the hyperparameter alpha to balance between the loss on values and the loss on derivatives
 alpha = 0.01
 
-`predictions = f_theta(X)`
-`predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)`
-`loss = loss_func(predictions, outputs) + alpha * loss_func(predictions_differentials, Z)`
+predictions = f_theta(X)
+predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)
+loss = loss_func(predictions, outputs) + alpha * loss_func(predictions_differentials, Z)
 
 {% endhighlight %}
 
