@@ -151,8 +151,7 @@ When training with Monte-Carlo paths using pathwise derivatives as differential 
 
 The only code that differs from the supervised learning approach without differentials is indicated by the red-highlighted lines.
 
-{% highlight python %}
-
+```python
 # for reproducibility
 torch.manual_seed(7)
 
@@ -199,8 +198,7 @@ loss.backward()
 
 # perform on optimization step in the Adam algorithm
 optimizer.step()
-
-{% endhighlight %}
+```
 
 ## Application on Black-Scholes Example
 
