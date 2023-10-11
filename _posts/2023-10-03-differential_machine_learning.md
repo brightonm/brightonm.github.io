@@ -128,8 +128,10 @@ In PyTorch, to begin dynamically tracking the computation graph, we need to set 
 Now that we have both the true differential labels and their approximations produced by the neural network, we can penalize the approximation errors using the same metric (MSE) that we used for penalizing errors in values:
 
 $$
-MSE_{value}(\theta) = \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2
-MSE_{differentials}(\theta) = \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}(Z_ij - \frac{f_{\theta}(X)}{X}_{ij})^2
+\begin{align*}
+MSE_{value}(\theta) &= \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2 \\
+MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}(Z_ij - \frac{f_{\theta}(X)}{X}_{ij})^2
+\end{align}
 $$
 
 These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much we want to penalize the derivatives. By default, we set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
