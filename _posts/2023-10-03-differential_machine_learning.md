@@ -129,8 +129,8 @@ Now that we have both the true differential labels and their approximations prod
 
 $$
 \begin{align*}
-MSE_{value}(\theta) &= \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2 \\
-MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}(Z_ij - \frac{f_{\theta}(X)}{X}_{ij})^2
+MSE_{value}(\theta) &= \frac{1}{n} \sum_{i=0}^{n}\left(y_i - f_{\theta}(x_i)\right)^2 \\
+MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}\left(Z_{ij} - \frac{\partial f_{\theta}(X)}{\partial X}_{ij}\right)^2
 \end{align*}
 $$
 
