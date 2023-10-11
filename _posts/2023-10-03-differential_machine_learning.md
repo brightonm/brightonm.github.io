@@ -49,7 +49,7 @@ Various numerical algorithms based on mini-batch stochastic gradient descent, su
 {% highlight python %}
 import torch
 import torch.nn as nn
-from torch.optimizer import Adam
+from torch.optim import Adam
 
 # for reproducibility
 torch.manual_seed(7)
@@ -67,14 +67,15 @@ loss_func = nn.MSE()
 # define the optimizer
 optimizer = Adam(f_theta.parameters(), lr=1e-3)
 
-# generate random inputs and outputs simulating one batch
+# generate random inputs and outputs simulating a single batch
 n_samples = 256
 d_features = 5
 X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
 ...
 
-`loss = loss_func(f_theta(X), outputs)`
+`predictions = f_theta(X)`
+`loss = loss_func(predictions, outputs)`
 
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
@@ -109,15 +110,39 @@ Unlike the article, I'm adopting an offline learning approach here. I'll be empl
 
 <div style="text-align: center; margin-bottom: 20px;">
   <img src="/docs/assets/images/diff_ml_twin_network.PNG" alt="Image description">
-  <figcaption>Fig. 2. Twin network (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
+  <figcaption>Fig. 2. Twin network. (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
 </div>
 
-They present a twin network to show that, in the same way we can get derivatives of outputs regarding to weights, we can have. It's very easy to simulate in a pythonic way using PyTorch, see the next section.
+They introduce a twin network to demonstrate that, just as we can compute derivatives of outputs with respect to weights, we can also calculate the derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
+
+In essence, this is accomplished by recording the computation graph during the forward pass. As a result, for each variable, whether it's an input, weight, or bias, there exists a computational path of simple operations leading from them to the resulting outputs. Each node along these paths contains information about the forward operation itself and its corresponding inverse operation required for gradient backpropagation.
+
+Hence, we can obtain the derivative of any variables 'b' situated within a node of the graph concerning any other node of the graph that contains variable 'a,' as long as 'b' is positioned ahead of 'a' in the computational graph. This capability enables us to compute the derivatives of the outputs with respect to the inputs of the neural network.
+
+Simulating this in a Pythonic manner using PyTorch is straightforward using `torch.autograd` (quote), as demonstrated in the PyTorch implementation.
+
+Ajouter photo de la loss et expliquer comment on pénalise de maniere supervisé les dérivées
 
 ### PyTorch implementation
 
 *In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 </a>.
+
+The only code that changes, with respect to the supervised learning approach without differentials is the highlighting part in red. We use the autograd module of pytorch that is used during traditional backward phase occuring when executing `loss.backward()`.
+
+{% highlight python %}
+
+# Generate random derivatives associated with inputs and outputs simulating a single batch
+Z = torch.rand(256, 5)
+
+# Set the hyperparameter alpha to balance between the loss on values and the loss on derivatives
+alpha = 0.01
+
+`predictions = f_theta(X)`
+`predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)`
+`loss = loss_func(predictions, outputs) + alpha * loss_func(predictions_differentials, Z)`
+
+{% endhighlight %}
 
 ## Application on Black-Scholes Example
 
