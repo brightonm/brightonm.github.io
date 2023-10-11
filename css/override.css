@@ -64,3 +64,8 @@ figcaption {
 
 }
 
+pre,
+code {
+    background-color: #eef;
+}
+
