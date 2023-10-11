@@ -111,10 +111,6 @@ pre>code {
     padding-left: 0
 }
 
-code.language-python {
-    background-color: #eef;
-}
-
 .wrapper {
     max-width: -webkit-calc(800px - (30px * 2));
     max-width: calc(800px - (30px * 2));
