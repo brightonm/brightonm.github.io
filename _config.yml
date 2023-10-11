@@ -25,6 +25,8 @@ theme: "minima"
 
 markdown: kramdown
 
+highlighter: rouge
+
 kramdown:
   math_engine: katex
   input: GFM
