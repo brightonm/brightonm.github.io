@@ -139,9 +139,14 @@ In PyTorch, to begin dynamically tracking the computation graph, we need to set 
 ```python
 # flush the previous computed gradients with respect to weights
 optimizer.zero_grad()
-
 X.requires_grad = True
-f_theta()
+
+# forward pass
+predictions = f_theta(X)
+
+# create_graph argument creates the graph of calculation of the derivatives
+# Needed here to be set to True, to backpropagate the loss through this new graph
+predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)
 ```
 
 #### New loss function
@@ -156,7 +161,8 @@ MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}
 $$
 
 ```python
-
+loss_values = loss_func(predictions, outputs)
+loss_differentials = loss_func(predictions_differentials, Z)
 ```
 
 These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much we want to penalize the derivatives. By default, we set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
@@ -168,10 +174,20 @@ $$
 TODO : parler de la normalization
 
 ```python
-# flush the previous computed gradients
-optimizer.zero_grad()
+# Set new hyperparameter
+alpha = 0.01
 
 Z_norm = Z.sum(dim=1) # à exécuter pour voir
+
+loss = alpha * loss_values + (1 - alpha) * loss_diffentials
+
+
+# Compute the derivatives with respect to weights and biases of the f_theta.
+# they are store in the .grad attribute of weights tensors
+loss.backward()
+
+# perform on optimization step in the Adam algorithm
+optimizer.step()
 ```
 
 Remark : When training with Monte-Carlo paths using pathwise derivatives as differential labels (as in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
