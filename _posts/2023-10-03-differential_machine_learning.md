@@ -52,7 +52,6 @@ y = torch.rand(n_samples, 1)
 
 The idea is to approximate the pricing function $f$ by employing a neural network denoted as $f_{\theta}$, where $\theta$ represents its weights and biases. Inference with a neural network is fast and amenable to batching. Therefore, in situations where traditional pricing methods prove to be slow, the neural network approximation can serve as a promising alternative.
 
-
 ```python
 # define neural network
 f_theta = nn.Sequential(
@@ -69,14 +68,14 @@ $$
 $$
 
 ```python
-# define the loss function
+# define loss function
 loss_func = nn.MSE()
 ```
 
 Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial J(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
 ```python
-# define the optimizer
+# define optimizer
 optimizer = Adam(f_theta.parameters(), lr=1e-3)
 
 # make predictions
@@ -85,7 +84,7 @@ predictions = f_theta(X)
 # penalize errors
 loss = loss_func(predictions, outputs)
 
-# compute the derivatives with respect to weights and biases of the f_theta.
+# compute derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
 loss.backward()
 
@@ -115,7 +114,7 @@ Z_{ij} = \frac{\partial y_i}{\partial X_{ij}}
 $$
 
 ```python
-# Generate random labels derivatives associated with inputs and outputs simulating a single batch
+# generate random labels derivatives associated with inputs and outputs simulating a single batch
 Z = torch.rand(256, 5)
 ```
 
@@ -128,16 +127,16 @@ Z = torch.rand(256, 5)
   <figcaption>Fig. 2. Twin network. (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
 </div>
 
-They introduce a twin network to demonstrate that, just as we can compute derivatives of outputs with respect to weights, we can also calculate the derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
+They introduce a twin network to demonstrate that, just as you can compute derivatives of outputs with respect to weights, you can also calculate the derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
 
 In essence, this is accomplished by recording the computation graph during the forward pass. As a result, for each variable, whether it is an input, weight, or bias of the neural network there exists a computational path of simple operations leading from them to the resulting outputs. Each node along these paths contains information about the forward operation itself and its corresponding inverse operation required for gradient backpropagation .
 
-Hence, we can obtain the derivative of any variables 'b' situated within a node of the graph concerning any other node of the graph that contains variable 'a,' as long as 'b' is positioned ahead of 'a' in the computational graph. This capability enables us to compute the derivatives of the outputs with respect to the inputs of the neural network.
+Hence, you can obtain the derivative of any variables 'b' situated within a node of the graph concerning any other node of the graph that contains variable 'a,' as long as 'b' is positioned ahead of 'a' in the computational graph. This capability enables us to compute the derivatives of the outputs with respect to the inputs of the neural network.
 
-In PyTorch, to begin dynamically tracking the computation graph, we need to set the `requires_grad` attribute of the variable for which we want to compute derivatives. In this context, the inputs require this attribute to be set to `True`. The weights and biases, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
+In PyTorch, to begin dynamically tracking the computation graph, you need to set the `requires_grad` attribute of the variable for which you want to compute derivatives. In this context, the inputs require this attribute to be set to `True`. The weights and biases, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
 ```python
-# flush the previous computed gradients with respect to weights
+# flush previous computed gradients with respect to weights
 optimizer.zero_grad()
 X.requires_grad = True
 
@@ -151,7 +150,7 @@ predictions_differentials = torch.autograd.grad(predictions, X, create_graph=Tru
 
 #### New loss function
 
-Now that we have both the true differential labels and their approximations produced by the neural network, we can penalize the approximation errors using the same metric (MSE) that we used for penalizing errors in values:
+Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values:
 
 $$
 \begin{align*}
@@ -161,11 +160,14 @@ MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}
 $$
 
 ```python
+# loss on values
 loss_values = loss_func(predictions, outputs)
+
+# loss on differentials
 loss_differentials = loss_func(predictions_differentials, Z)
 ```
 
-These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much we want to penalize the derivatives. By default, we set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
+These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much you want to penalize the derivatives. By default, set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
 
 $$
 J(\theta) = \alpha \times MSE_{value}(\theta) + (1-\alpha) \times MSE_{differentials}(\theta)
@@ -174,15 +176,15 @@ $$
 TODO : parler de la normalization
 
 ```python
-# Set new hyperparameter
-alpha = 0.01
-
+# normalize
 Z_norm = Z.sum(dim=1) # à exécuter pour voir
 
+# set new hyperparameter
+alpha = 0.01
 loss = alpha * loss_values + (1 - alpha) * loss_diffentials
 
 
-# Compute the derivatives with respect to weights and biases of the f_theta.
+# compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
 loss.backward()
 
@@ -192,65 +194,9 @@ optimizer.step()
 
 Remark : When training with Monte-Carlo paths using pathwise derivatives as differential labels (as in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
 
-### PyTorch implementation
-
-*In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
-</a>.
-
-The only code that differs from the supervised learning approach without differentials is indicated by the red-highlighted lines.
-
-{% highlight python %}
-# for reproducibility
-torch.manual_seed(7)
-
-# define neural network
-f_theta = nn.Sequential(
-            nn.Linear(5, 64),
-            nn.ReLU(),
-            nn.Linear(64, 1)
-          )
-
-# define the loss function
-loss_func = nn.MSE()
-
-# define the optimizer
-optimizer = Adam(f_theta.parameters(), lr=1e-3)
-
-# generate random inputs and outputs simulating a single batch
-n_samples = 256
-d_features = 5
-X = torch.rand(n_samples, d_features)
-y = torch.rand(n_samples, 1)
-
-# Generate random derivatives associated with inputs and outputs simulating a single batch
-Z = torch.rand(256, 5)
-Z_norm = Z.sum(dim=1) # à exécuter pour voir
-X.requires_grad = True
-
-# Set the hyperparameter alpha to balance between the loss on values and the loss on derivatives
-alpha = 0.01
-
-predictions = f_theta(X)
-
-# Create graph, create the graph of calculation of the derivatives
-# Needed here to set to True, to backpropagate the loss through this graph
-
-loss_values = loss_func(predictions, outputs)
-predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)
-loss_differentials = loss_func(predictions_differentials, Z)
-loss = alpha * loss_values + (1 - alpha) * loss_diffentials
-
-# compute the derivatives with respect to weights and biases of the f_theta.
-# they are store in the .grad attribute of weights tensors
-loss.backward()
-
-# perform on optimization step in the Adam algorithm
-optimizer.step()
-{% endhighlight %}
-
 ## Application on Black-Scholes Example
 
-Unlike the article, we propose a simple example that does not use pathwise derivatives, which is the approximation of the price of a European call under Black-Scholes diffusion.
+Unlike the article, I propose a simple example that does not use pathwise derivatives, which is the approximation of the price of a European call under Black-Scholes diffusion.
 
 ### Supervised Learning as Benchmark
 
