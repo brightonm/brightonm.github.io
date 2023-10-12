@@ -176,7 +176,6 @@ loss_values = loss_func(predictions, outputs)
 
 # compute scaling factor
 lambdas = 1.0 / (torch.sqrt((Z * Z).mean(dim=0)))
-
 # loss on differentials
 loss_differentials = loss_func(lambdas * predictions_differentials, lambdas * Z)
 ```
@@ -188,18 +187,13 @@ J(\theta) = \alpha \times MSE_{value}(\theta) + (1-\alpha) \times MSE_{different
 $$
 
 ```python
-# normalize
-Z_norm = Z.sum(dim=1) # à exécuter pour voir
-
 # set new hyperparameter
 alpha = 0.01
 loss = alpha * loss_values + (1 - alpha) * loss_diffentials
 
-
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
 loss.backward()
-
 # perform on optimization step in the Adam algorithm
 optimizer.step()
 ```
