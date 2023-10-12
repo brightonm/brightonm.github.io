@@ -6,7 +6,8 @@ body,h1,h2,h3,h4,h5,h6,p,blockquote,pre,hr,dl,dd,ol,ul,figure {
 }
 
 body {
-    font: 400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    /* font: 400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; */
+    font: 400 16px/1.5 Inter,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-sans;
     color: #111;
     background-color: #fdfdfd;
     -webkit-text-size-adjust: 100%;
@@ -19,6 +20,7 @@ body {
     min-height: 100vh;
     flex-direction: column
 }
+
 
 h1,h2,h3,h4,h5,h6,p,blockquote,pre,ul,ol,dl,figure,.highlight {
     margin-bottom: 15px
@@ -53,7 +55,7 @@ li>ul,li>ol {
 }
 
 h1,h2,h3,h4,h5,h6 {
-    font-weight: 400
+    font-weight: 600;
 }
 
 a {
@@ -82,7 +84,7 @@ blockquote {
     color: #828282;
     border-left: 4px solid #e8e8e8;
     padding-left: 15px;
-    font-size: 13px;
+    font-size: 15px;
     letter-spacing: -1px;
     font-style: italic
 }
