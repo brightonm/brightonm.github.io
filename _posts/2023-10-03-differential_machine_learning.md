@@ -160,7 +160,8 @@ predictions_differentials = torch.autograd.grad(predictions,
 ### New loss function
 
 Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values.
-Keep in mind that the $Z$ differential dataset is built with Greeks of significantly varying magnitudes. Take, for instance, the case of European Call prices in the Black-Scholes model, where the theta Greek is much smaller compared to the gamma. Think of it as trying to combine "apples and oranges", as the saying goes. To address this, you need to make sure that errors in one derivative are penalized in a similar way to errors in another. You can achieve this by normalizing the differentials, which involves multiplying them by a scaling coefficient denoted as $\lambda_j=\frac{1}{\left|\left|Z_j\right|\right|}$.
+
+Keep in mind that the $Z$ differential dataset is built with Greeks of significantly varying magnitudes. Take, for instance, the case of European Call prices in the Black-Scholes model, where the theta Greek is much smaller compared to the gamma. Think of it as trying to combine "apples and oranges", as the saying goes. To address this, you need to make sure that errors in one derivative are penalized in a similar way to errors in another. You can achieve this by normalizing the differentials, which involves multiplying them by a scaling coefficient denoted as $\lambda_j=\frac{1}{\left|\left|Z_j\right|\right|} $.
 
 $$
 \begin{align*}
