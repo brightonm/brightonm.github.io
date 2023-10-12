@@ -1,4 +1,4 @@
-# Differential Deep Learning
+# Differential Deep Learning 
 
 <div>
     <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;">
@@ -161,7 +161,7 @@ predictions_differentials = torch.autograd.grad(predictions,
 
 Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values.
 
-Keep in mind that the $Z$ differential dataset is built with Greeks of significantly varying magnitudes. Take, for instance, the case of European Call prices in the Black-Scholes model, where the theta Greek is much smaller compared to the gamma. Think of it as trying to combine "apples and oranges", as the saying goes. To address this, you need to make sure that errors in one derivative are penalized in a similar way to errors in another. You can achieve this by normalizing the differentials, which involves multiplying them by a scaling coefficient denoted as $\lambda_j=\frac{1}{\left|\left|Z_j\right|\right|}$ fuhfuids
+Keep in mind that the $Z$ differential dataset is built with Greeks of significantly varying magnitudes. Take, for instance, the case of European Call prices in the Black-Scholes model, where the theta Greek is much smaller compared to the gamma. Think of it as trying to combine "apples and oranges", as the saying goes. To address this, you need to make sure that errors in one derivative are penalized in a similar way to errors in another. You can achieve this by normalizing the differentials, which involves multiplying them by a scaling coefficient denoted as $\lambda_j=\frac{1}{\left\lVert Z_j\right\rVert}$
 
 
 $$
@@ -238,10 +238,9 @@ Or
 
 [1] Huge, Brian & Antoine Savine. <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">"Differential machine learning: The shape of things to come."</a> Risk 10 2020.
 
-[2] Kingma et al. <a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111"> "Adam: A Method for Stochastic Optimization
-"</a> arXiv:1412.6980 (2014).
+[2] Kingma et al. <a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111"> "Adam: A Method for Stochastic Optimization."</a> arXiv:1412.6980 (2014).
 
-[3] Paszke et al. <a href="https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">"Automatic differentiation in PyTorch"</a>  NIPS 2017 Workshop.
+[3] Paszke et al. <a href="https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">"Automatic differentiation in PyTorch."</a>  NIPS 2017 Workshop.
 
 [4] Savine, Antoine. <a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">"Modern computational finance: AAD and parallel simulations."</a> John Wiley & Sons, 2018.
 
