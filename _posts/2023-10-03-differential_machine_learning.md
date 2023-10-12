@@ -16,7 +16,7 @@
 
 This post presents an annotated version of the **Differential Machine Learning** paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch implementation.
 
-*I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
+*I emphasize key code sections; the full code and documentation are in the notebooks* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 
 * TOC
 {:toc}
@@ -32,6 +32,8 @@ torch.manual_seed(7)
 ```
 
 ## Supervised Learning
+
+<!-- TODO : add standardization -->
 
 Let $X \in \mathbb{R}^{n \times d}$ be a dataset of inputs with $n$ samples and $d$ features, and let $y \in \mathbb{R}^{n}$ represent the corresponding labels. In the context of pricing a financial derivative, $X$ contains information about the derivative's payoff, such as the strike price, and the model used to compute the price, along with market data like spot prices and interest rates. $y$ represents the corresponding prices. Depending on the pricing model and payoff structure, these prices can be generated either analytically or through computationally expensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
 
@@ -144,18 +146,24 @@ X.requires_grad = True
 predictions = f_theta(X)
 
 # create_graph argument creates the graph of calculation of the derivatives
-# Needed here to be set to True, to backpropagate the loss through this new graph
-predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True)
+# needs here to be set to True, to backpropagate the loss through this new graph
+
+# grad_outputs argument must be specified when not differentiating a scalar
+# must as the same shape of the starting tensor of the backpropagation graph (here predictions)
+# contains the weights of the different terms of the sum of the gradients (here all ones)
+predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True, grad_outputs=torch.ones_like(predictions))
 ```
 
 #### New loss function
 
-Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values:
+Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values.
+
+Keep in mind that the $Z$ differential dataset is built with Greeks of significantly varying magnitudes. Take, for instance, the case of European Call prices in the Black-Scholes model, where the theta Greek is much smaller compared to the gamma. Think of it as trying to combine "apples and oranges", as the saying goes. To address this, you need to make sure that errors in one derivative are penalized in a similar way to errors in another. You can achieve this by normalizing the differentials, which involves multiplying them by a scaling coefficient denoted as $\lambda_j=\frac{1}{||Z_j||}$.
 
 $$
 \begin{align*}
 MSE_{value}(\theta) &= \frac{1}{n} \sum_{i=0}^{n}\left(y_i - f_{\theta}(x_i)\right)^2 \\
-MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}\left(Z_{ij} - \frac{\partial f_{\theta}(X)}{\partial X}_{ij}\right)^2
+MSE_{differentials}(\theta) &= \frac{1}{n} \sum_{i=0}^{n}\sum_{j=0}^{m} \lambda_j^2 \left(Z_{ij} - \left(\frac{\partial f_{\theta}(X)}{\partial X}\right)_{ij}\right)^2
 \end{align*}
 $$
 
@@ -163,8 +171,11 @@ $$
 # loss on values
 loss_values = loss_func(predictions, outputs)
 
+# compute scaling factor
+lambdas = 1.0 / (torch.sqrt((Z * Z).mean(dim=0)))
+
 # loss on differentials
-loss_differentials = loss_func(predictions_differentials, Z)
+loss_differentials = loss_func(lambdas * predictions_differentials, lambdas * Z)
 ```
 
 These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much you want to penalize the derivatives. By default, set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
@@ -172,8 +183,6 @@ These two losses can be combined in a convex manner by introducing an additional
 $$
 J(\theta) = \alpha \times MSE_{value}(\theta) + (1-\alpha) \times MSE_{differentials}(\theta)
 $$
-
-TODO : parler de la normalization
 
 ```python
 # normalize
