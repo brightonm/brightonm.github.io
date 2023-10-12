@@ -16,9 +16,10 @@
 
 This post presents an annotated version of the **Differential Machine Learning** paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch implementation.
 
+*I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
+
 * TOC
 {:toc}
-
 
 ## Supervised Learning
 
@@ -87,7 +88,7 @@ optimizer.step()
 
 ## Supervised Learning with differentials
 
-*Unlike the article, I'm adopting an offline learning approach here. I'll be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a predefined domain of market data.*
+*Unlike the article, I am adopting an offline learning approach here. I will be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a predefined domain of market data.*
 
 ### Training with Derivatives
 
@@ -117,7 +118,7 @@ $$
 
 They introduce a twin network to demonstrate that, just as we can compute derivatives of outputs with respect to weights, we can also calculate the derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
 
-In essence, this is accomplished by recording the computation graph during the forward pass. As a result, for each variable, whether it's an input, weight, or bias of the neural network there exists a computational path of simple operations leading from them to the resulting outputs. Each node along these paths contains information about the forward operation itself and its corresponding inverse operation required for gradient backpropagation .
+In essence, this is accomplished by recording the computation graph during the forward pass. As a result, for each variable, whether it is an input, weight, or bias of the neural network there exists a computational path of simple operations leading from them to the resulting outputs. Each node along these paths contains information about the forward operation itself and its corresponding inverse operation required for gradient backpropagation .
 
 Hence, we can obtain the derivative of any variables 'b' situated within a node of the graph concerning any other node of the graph that contains variable 'a,' as long as 'b' is positioned ahead of 'a' in the computational graph. This capability enables us to compute the derivatives of the outputs with respect to the inputs of the neural network.
 
