@@ -56,7 +56,7 @@ The idea is to approximate the pricing function $f$ by employing a neural networ
 # define neural network
 f_theta = nn.Sequential(
             nn.Linear(5, 64),
-            nn.ReLU(),
+            nn.Softplus(),
             nn.Linear(64, 1)
           )
 ```
