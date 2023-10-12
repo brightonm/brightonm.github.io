@@ -151,7 +151,10 @@ predictions = f_theta(X)
 # grad_outputs argument must be specified when not differentiating a scalar
 # must as the same shape of the starting tensor of the backpropagation graph (here predictions)
 # contains the weights of the different terms of the sum of the gradients (here all ones)
-predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True, grad_outputs=torch.ones_like(predictions))
+predictions_differentials = torch.autograd.grad(predictions,
+                                                X, 
+                                                create_graph=True, 
+                                                grad_outputs=torch.ones_like(predictions))
 ```
 
 ### New loss function
