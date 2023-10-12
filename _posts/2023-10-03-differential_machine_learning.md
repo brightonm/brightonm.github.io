@@ -94,13 +94,12 @@ loss.backward()
 optimizer.step()
 ```
 
-## Supervised Learning with differentials
+## Differential Machine Learning : Training with Derivatives
 
 *Unlike the article, I am adopting an offline learning approach here. I will be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a predefined domain of market data.*
 
-### Training with Derivatives
 
-#### Differential labels
+### Differential labels
 
 In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks", is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
 
@@ -122,7 +121,7 @@ Z = torch.rand(256, 5)
 
  The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
-#### Differential predictions
+### Differential predictions
 
 <div style="text-align: center; margin-bottom: 20px;">
   <img src="/docs/assets/images/diff_ml_twin_network.PNG" alt="Image description">
@@ -154,7 +153,7 @@ predictions = f_theta(X)
 predictions_differentials = torch.autograd.grad(predictions, X, create_graph=True, grad_outputs=torch.ones_like(predictions))
 ```
 
-#### New loss function
+### New loss function
 
 Now that you have both the true differential labels and their approximations produced by the neural network, you can penalize the approximation errors using the same metric (MSE) that you used for penalizing errors in values.
 
