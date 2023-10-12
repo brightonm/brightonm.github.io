@@ -80,17 +80,17 @@ Various numerical algorithms based on mini-batch stochastic gradient descent, su
 # define optimizer
 optimizer = Adam(f_theta.parameters(), lr=1e-3)
 
-# make predictions
+# forward pass
 predictions = f_theta(X)
 
 # penalize errors
 loss = loss_func(predictions, outputs)
 
-# compute derivatives with respect to weights and biases of the f_theta.
-# they are store in the .grad attribute of weights tensors
+# compute derivatives with respect to weights and biases of the neural network f_theta
+# they are stored in the .grad attribute of weights tensors
 loss.backward()
 
-# perform on optimization step on this single batch in the Adam algorithm
+# perform one optimization step on this single batch in the Adam algorithm
 optimizer.step()
 ```
 
@@ -101,7 +101,7 @@ optimizer.step()
 
 ### Differential labels
 
-In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks", is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as 
+In the field of quantitative finance, assessing price sensitivities to market data, commonly referred to as "the Greeks", is crucial for effective hedging and robust risk management. Differential machine learning leverages these sensitivities by incorporating them into the training process of supervised learning techniques. This approach involves working with augmented datasets that include differentials of labels with respect to inputs, denoted as
 
 $$
 Z = \frac{\partial y}{\partial X} \in \mathbb{R}^{n \times d}\\
@@ -115,7 +115,8 @@ Z_{ij} = \frac{\partial y_i}{\partial X_{ij}}
 $$
 
 ```python
-# generate random labels derivatives associated with inputs and outputs simulating a single batch
+# generate random labels derivatives associated with inputs and outputs
+# simulating a single batch
 Z = torch.rand(256, 5)
 ```
 
@@ -128,11 +129,11 @@ Z = torch.rand(256, 5)
   <figcaption>Fig. 2. Twin network. (Image source: <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a>)</figcaption>
 </div>
 
-They introduce a twin network to demonstrate that, just as you can compute derivatives of outputs with respect to weights, you can also calculate the derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
+They introduce a twin network to illustrate a fundamental concept: similar to how you can calculate derivatives of outputs with respect to weights, you can also compute derivatives of outputs with respect to inputs using the same technique, known as AAD. Under the hood, every deep learning library employs this method to propagate gradients during backpropagation.
 
-In essence, this is accomplished by recording the computation graph during the forward pass. As a result, for each variable, whether it is an input, weight, or bias of the neural network there exists a computational path of simple operations leading from them to the resulting outputs. Each node along these paths contains information about the forward operation itself and its corresponding inverse operation required for gradient backpropagation .
+In practical terms, it involves tracking the computational process during the forward pass. This means that for each variable, whether it is an input, weight, or bias within the neural network, there is a sequence of straightforward operations that lead from these variables to the final outputs. Every step along this path contains information about the forward operation as well as the corresponding reverse operation needed for gradient backpropagation.
 
-Hence, you can obtain the derivative of any variables 'b' situated within a node of the graph concerning any other node of the graph that contains variable 'a,' as long as 'b' is positioned ahead of 'a' in the computational graph. This capability enables us to compute the derivatives of the outputs with respect to the inputs of the neural network.
+Consequently, you have the ability to determine the derivative of any variable 'b' within one node of the graph concerning any other node in the graph that contains variable 'a,' provided that 'b' is positioned ahead of 'a' in the computational graph. This powerful capability allows you to compute the derivatives of the network's outputs with respect to its inputs.
 
 In PyTorch, to begin dynamically tracking the computation graph, you need to set the `requires_grad` attribute of the variable for which you want to compute derivatives. In this context, the inputs require this attribute to be set to `True`. The weights and biases, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
