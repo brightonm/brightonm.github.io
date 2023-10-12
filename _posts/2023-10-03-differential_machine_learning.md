@@ -198,7 +198,7 @@ loss.backward()
 optimizer.step()
 ```
 
-Remark : When training with Monte-Carlo paths using pathwise derivatives as differential labels (as in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
+Note: When training with Monte-Carlo paths and using pathwise derivatives as differential labels (as described in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
 
 ## Application on Black-Scholes Example
 
