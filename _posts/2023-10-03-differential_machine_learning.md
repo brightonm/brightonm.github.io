@@ -21,6 +21,16 @@ This post presents an annotated version of the **Differential Machine Learning**
 * TOC
 {:toc}
 
+```python
+# imports
+import torch
+import torch.nn as nn
+from torch.optim import Adam
+
+# for reproducibility
+torch.manual_seed(7)
+```
+
 ## Supervised Learning
 
 Let $X \in \mathbb{R}^{n \times d}$ be a dataset of inputs with $n$ samples and $d$ features, and let $y \in \mathbb{R}^{n}$ represent the corresponding labels. In the context of pricing a financial derivative, $X$ contains information about the derivative's payoff, such as the strike price, and the model used to compute the price, along with market data like spot prices and interest rates. $y$ represents the corresponding prices. Depending on the pricing model and payoff structure, these prices can be generated either analytically or through computationally expensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
@@ -31,18 +41,6 @@ $$
   X &\mapsto y
 \end{align*}
 $$
-
-{% highlight python %}
-
-# imports
-import torch
-import torch.nn as nn
-from torch.optim import Adam
-
-# for reproducibility
-torch.manual_seed(7)
-
-{% endhighlight %}
 
 ```python
 # generate random inputs and outputs simulating a single batch
@@ -64,56 +62,34 @@ f_theta = nn.Sequential(
           )
 ```
 
-
 To closely replicate the pricer $f$, the neural network must be trained on $(X=(x_1, \dots, x_n), y)$. his is accomplished by minimizing the Mean Squared Error (MSE) as the loss function:
 
 $$
 \theta^* = \min_{\theta} J(\theta) = \min_{\theta} \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2
 $$
 
-Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial J(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
-
-### PyTorch implementation
-
-*In this blog post, I emphasize key code sections; the full code and documentation are in the notebook* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
-</a>.
-
 ```python
-import torch
-import torch.nn as nn
-from torch.optim import Adam
-
-# for reproducibility
-torch.manual_seed(7)
-
-# define neural network
-f_theta = nn.Sequential(
-            nn.Linear(5, 64),
-            nn.ReLU(),
-            nn.Linear(64, 1)
-          )
-
 # define the loss function
 loss_func = nn.MSE()
+```
 
+Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial J(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
+
+```python
 # define the optimizer
 optimizer = Adam(f_theta.parameters(), lr=1e-3)
 
-# generate random inputs and outputs simulating a single batch
-n_samples = 256
-d_features = 5
-X = torch.rand(n_samples, d_features)
-y = torch.rand(n_samples, 1)
-...
-
+# make predictions
 predictions = f_theta(X)
+
+# penalize errors
 loss = loss_func(predictions, outputs)
 
 # compute the derivatives with respect to weights and biases of the f_theta.
 # they are store in the .grad attribute of weights tensors
 loss.backward()
 
-# perform on optimization step in the Adam algorithm
+# perform on optimization step on this single batch in the Adam algorithm
 optimizer.step()
 ```
 
@@ -138,6 +114,11 @@ $$
 Z_{ij} = \frac{\partial y_i}{\partial X_{ij}}
 $$
 
+```python
+# Generate random labels derivatives associated with inputs and outputs simulating a single batch
+Z = torch.rand(256, 5)
+```
+
  The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
 #### Differential predictions
@@ -155,6 +136,14 @@ Hence, we can obtain the derivative of any variables 'b' situated within a node 
 
 In PyTorch, to begin dynamically tracking the computation graph, we need to set the `requires_grad` attribute of the variable for which we want to compute derivatives. In this context, the inputs require this attribute to be set to `True`. The weights and biases, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
+```python
+# flush the previous computed gradients with respect to weights
+optimizer.zero_grad()
+
+X.requires_grad = True
+f_theta()
+```
+
 #### New loss function
 
 Now that we have both the true differential labels and their approximations produced by the neural network, we can penalize the approximation errors using the same metric (MSE) that we used for penalizing errors in values:
@@ -166,15 +155,26 @@ MSE_{differentials}(\theta) &= \frac{1}{n \times m} \sum_{j=0}^{m}\sum_{i=0}^{n}
 \end{align*}
 $$
 
+```python
+
+```
+
 These two losses can be combined in a convex manner by introducing an additional hyperparameter, denoted as $\alpha$, which controls how much we want to penalize the derivatives. By default, we set $\alpha$ to $\frac{1}{m+1}$, where $m$ represents the number of features with respect to which derivatives are calculated. This choice considers one error in the price to be as important as an error in one of the Greeks.
 
 $$
 J(\theta) = \alpha \times MSE_{value}(\theta) + (1-\alpha) \times MSE_{differentials}(\theta)
 $$
 
-TODO : parler de la normalization 
+TODO : parler de la normalization
 
-When training with Monte-Carlo paths using pathwise derivatives as differential labels (as in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
+```python
+# flush the previous computed gradients
+optimizer.zero_grad()
+
+Z_norm = Z.sum(dim=1) # à exécuter pour voir
+```
+
+Remark : When training with Monte-Carlo paths using pathwise derivatives as differential labels (as in the article), this additional term can be regarded as a form of regularization, akin to Tikhonov or Lasso regularization. It helps in avoiding the overfitting that can occur when fitting noisy samples.
 
 ### PyTorch implementation
 
