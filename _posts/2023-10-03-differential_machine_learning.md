@@ -34,6 +34,7 @@ $$
 
 {% highlight python %}
 
+# imports
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -51,8 +52,18 @@ X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
 ```
 
-
 The idea is to approximate the pricing function $f$ by employing a neural network denoted as $f_{\theta}$, where $\theta$ represents its weights and biases. Inference with a neural network is fast and amenable to batching. Therefore, in situations where traditional pricing methods prove to be slow, the neural network approximation can serve as a promising alternative.
+
+
+```python
+# define neural network
+f_theta = nn.Sequential(
+            nn.Linear(5, 64),
+            nn.ReLU(),
+            nn.Linear(64, 1)
+          )
+```
+
 
 To closely replicate the pricer $f$, the neural network must be trained on $(X=(x_1, \dots, x_n), y)$. his is accomplished by minimizing the Mean Squared Error (MSE) as the loss function:
 
