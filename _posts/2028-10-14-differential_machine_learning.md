@@ -14,12 +14,15 @@
   <figcaption>Fig. 1. Differential Machine Learning paper by <a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #888;">Savine et al., 2020</a></figcaption>
 </div>
 
-This post presents an annotated version of the **Differential Machine Learning** paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch implementation.
+This post presents an annotated version of the **Differential Machine Learning** paper (<a href="https://arxiv.org/abs/2005.02347" style="text-decoration: underline; color: #111">Savine et al., 2020</a>) with PyTorch.
 
-*I emphasize key code sections; the full code and documentation are in the notebooks* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
+*I emphasize key code sections; the full code is available in the notebooks* <a href="https://github.com/brightonm/notebooks/blob/main/Differential%20Deep%20Learning%20in%20Pytorch.ipynb" style="text-decoration: none; color: black;"><i class="fa fa-book fa" style="color: darkorange; font-size: 18px;"></i>
 
+<details>
+<summary>Table of contents</summary>
 * TOC
 {:toc}
+</details>
 
 ```python
 # imports
@@ -33,9 +36,10 @@ torch.manual_seed(7)
 
 ## Supervised Learning
 
-<!-- TODO : add standardization -->
 
-Let $X \in \mathbb{R}^{n \times d}$ be a dataset of inputs with $n$ samples and $d$ features, and let $y \in \mathbb{R}^{n}$ represent the corresponding labels. In the context of pricing a financial derivative, $X$ contains information about the derivative's payoff, such as the strike price, and the model used to compute the price, along with market data like spot prices and interest rates. $y$ represents the corresponding prices. Depending on the pricing model and payoff structure, these prices can be generated either analytically or through computationally expensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
+Consider a dataset $X$ in $\mathbb{R}^{n \times d}$ containing inputs with $n$ samples and $d$ features. These inputs are paired with corresponding labels represented by $y$ in $\mathbb{R}^{n}$. In the context of pricing financial derivatives, $X$ holds valuable information, including details about the derivative's payoff, like the strike price, and the model used for price calculation. It also encompasses market data such as spot prices and interest rates. The labels $y$ correspond to the prices of these derivatives.
+
+The process of determining these prices can take different forms. Depending on the pricing model and the structure of the derivative's payoff, prices can be computed analytically or through more computationally intensive numerical methods, such as Monte Carlo simulations. The pricing function, denoted as $f$, maps $X$ to $y$ as follows:
 
 $$
 \begin{align*}
@@ -50,9 +54,21 @@ n_samples = 256
 d_features = 5
 X = torch.rand(n_samples, d_features)
 y = torch.rand(n_samples, 1)
+
+In practice, inputs and outputs are often standardized to have a mean of 0 and a standard deviation of 1. This standardization ensures that input features are on a similar scale, which helps improve convergence.
+
+# In practice, inputs and outputs are often standardized 
+# to have a mean of 0 and a standard deviation of 1.
+# This standardization ensures that input features are 
+# on a similar scale, which helps improve convergence.
+X_mean, X_std = X.mean(dim=0), X.std(dim=0)
+X = (X - X_mean) / X_std
+
+y_mean, y_std = y.mean(dim=0), y.std(dim=0)
+y = (y - y_mean) / y_std
 ```
 
-The idea is to approximate the pricing function $f$ by employing a neural network denoted as $f_{\theta}$, where $\theta$ represents its weights and biases. Inference with a neural network is fast and amenable to batching. Therefore, in situations where traditional pricing methods prove to be slow, the neural network approximation can serve as a promising alternative.
+We aim to estimate the pricing function, $f$, using a neural network denoted as $f_{\theta}$, where $\theta$ refers to its weights and biases. The advantage of using a neural network is that inference is efficient and supports batching, making calculations faster and more convenient. This means that in scenarios where traditional pricing methods are slow, the neural network approximation offers a promising and faster alternative.
 
 ```python
 # define neural network
@@ -66,7 +82,7 @@ f_theta = nn.Sequential(
 To closely replicate the pricer $f$, the neural network must be trained on $(X=(x_1, \dots, x_n), y)$. his is accomplished by minimizing the Mean Squared Error (MSE) as the loss function:
 
 $$
-\theta^* = \min_{\theta} J(\theta) = \min_{\theta} \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2
+\theta^* = \min_{\theta} \mathcal{L}(\theta; X, y) = \min_{\theta} \frac{1}{n} \sum_{i=0}^{n}(y_i - f_{\theta}(x_i))^2
 $$
 
 ```python
@@ -74,7 +90,7 @@ $$
 loss_func = nn.MSE()
 ```
 
-Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial J(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
+Various numerical algorithms based on mini-batch stochastic gradient descent, such as Adam (<a href="https://arxiv.org/abs/1412.6980" style="text-decoration: underline; color: #111">Kingma et al., 2014</a>), can be employed to solve this optimization problem. These algorithms are typically implemented in deep learning libraries like PyTorch, JAX or TensorFlow, that leverage Automatic Adjoint Differentiation (AAD) to efficiently compute the quantity $\frac{\partial \mathcal{L}(\theta)}{\partial \theta}$ (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
 ```python
 # define optimizer
@@ -86,7 +102,7 @@ predictions = f_theta(X)
 # penalize errors
 loss = loss_func(predictions, outputs)
 
-# compute derivatives with respect to weights and biases of the neural network f_theta
+# compute derivatives with respect to weights and biases of the nn
 # they are stored in the .grad attribute of weights tensors
 loss.backward()
 
@@ -96,8 +112,9 @@ optimizer.step()
 
 ## Differential Machine Learning : Training with Derivatives
 
-*Unlike the article, I am adopting an offline learning approach here. I will be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a predefined domain of market data.*
+<!-- TODO standardization in the code -->
 
+*Unlike the article, I am adopting an offline learning approach here. I will be employing differential machine learning by training on ground truth prices instead of noisy sampled payoffs, as seen in the article. Differential deep learning can also be beneficial in this context. While the data generation phase and training can be expensive, the neural network is trained just once on a large predefined domain of market data.*
 
 ### Differential labels
 
@@ -107,8 +124,7 @@ $$
 Z = \frac{\partial y}{\partial X} \in \mathbb{R}^{n \times d}\\
 $$
 
-Each element $Z_{ij}$ in the matrix corresponds to the partial derivative of the $i$-th sample of the vector $y$ with respect to the $i$ sample and $j$-th feature of the dataset $X$.
-This can be expressed as:
+Each element $Z_{ij}$ in the matrix corresponds to the partial derivative of the $i$-th sample of the vector $y$ with respect to the $i$ sample and $j$-th feature of the dataset $X$:
 
 $$
 Z_{ij} = \frac{\partial y_i}{\partial X_{ij}}
@@ -120,7 +136,7 @@ $$
 Z = torch.rand(256, 5)
 ```
 
- The derivation of these differentials, which depends on the specific model and payoff structure, can be accomplished through various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
+ The derivation of these differentials depends on the specific model and payoff structure. This can be achieved thorugh various methods, including analytical calculations, numerical techniques such as Monte Carlo simulations, or the application of Automatic Adjoint Differentiation (AAD). (<a href="https://books.google.fr/books?hl=en&lr=&id=eZZxDwAAQBAJ&oi=fnd&pg=PR11&ots=VT7YWs35Du&sig=L9sgoh4lEZJYwghXWFbuIcauG4w&redir_esc=y#v=onepage&q&f=false" style="text-decoration: underline; color: #111">Savine, 2018</a>).
 
 ### Differential predictions
 
@@ -135,7 +151,7 @@ In practical terms, it involves tracking the computational process during the fo
 
 Consequently, you have the ability to determine the derivative of any variable 'b' within one node of the graph concerning any other node in the graph that contains variable 'a,' provided that 'b' is positioned ahead of 'a' in the computational graph. This powerful capability allows you to compute the derivatives of the network's outputs with respect to its inputs.
 
-In PyTorch, to begin dynamically tracking the computation graph, you need to set the `requires_grad` attribute of the variable for which you want to compute derivatives. In this context, the inputs require this attribute to be set to `True`. The weights and biases, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
+In PyTorch, to begin dynamically tracking the computation graph, you need to set to `True` the `requires_grad` attribute of the variable for which you want to compute derivatives. The weights and biases of the neural network, on the other hand, have this attribute set to True by default. Subsequently, to perform backpropagation through the graph up to a specific node, you only need a single line of PyTorch code, as demonstrated in the example below using `torch.autograd` (<a href=" https://openreview.net/pdf?id=BJJsrmfCZ" style="text-decoration: underline; color: #111">Paszke et al., 2017</a>).
 
 ```python
 # flush previous computed gradients with respect to weights
@@ -145,16 +161,21 @@ X.requires_grad = True
 # forward pass
 predictions = f_theta(X)
 
-# create_graph argument creates the graph of calculation of the derivatives
-# needs here to be set to True, to backpropagate the loss through this new graph
+# create_graph argument creates the graph of calculation 
+# of the derivatives. It needs here to be set to True,
+# in order to backpropagate the loss through this new graph
 
-# grad_outputs argument must be specified when not differentiating a scalar
-# must as the same shape of the starting tensor of the backpropagation graph (here predictions)
-# contains the weights of the different terms of the sum of the gradients (here all ones)
-predictions_differentials = torch.autograd.grad(predictions,
-                                                X, 
-                                                create_graph=True, 
-                                                grad_outputs=torch.ones_like(predictions))
+# grad_outputs argument must be specified when not 
+# differentiating a scalar. It must as the same shape
+# of the starting tensor of the backpropagation graph 
+# (here predictions). It contains the weights of the 
+# different terms of the sum of the gradients 
+# (here all ones)
+predictions_differentials = torch.autograd.grad(
+                              predictions,
+                              X, 
+                              create_graph=True, 
+                              grad_outputs=torch.ones_like(predictions))
 ```
 
 ### New loss function
